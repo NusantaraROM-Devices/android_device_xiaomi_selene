@@ -28,9 +28,6 @@ $(call inherit-product, vendor/xiaomi/selene/selene-vendor.mk)
 # Installs gsi keys into ramdisk, to boot a developer GSI with verified boot.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/developer_gsi_keys.mk)
 
-# APEX
-OVERRIDE_PRODUCT_COMPRESSED_APEX := false
-
 # APNs
 PRODUCT_COPY_FILES += \
     $(DEVICE_PATH)/configs/apns-conf.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/apns-conf.xml
@@ -147,6 +144,40 @@ PRODUCT_PACKAGES += \
 # Camera
 PRODUCT_PACKAGES += \
     Aperture
+    
+# Dex
+DONT_DEXPREOPT_PREBUILTS := true
+WITH_DEXPREOPT := true
+WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := false
+WITH_DEXPREOPT_DEBUG_INFO := false
+PRODUCT_ALWAYS_PREOPT_EXTRACTED_APK := true
+PRODUCT_DEX_PREOPT_DEFAULT_COMPILER_FILTER := verify
+PRODUCT_DEX_PREOPT_GENERATE_DM_FILES := true
+PRODUCT_SYSTEM_SERVER_COMPILER_FILTER := speed-profile
+
+# Dex - Android Go Configurations
+PRODUCT_USE_PROFILE_FOR_BOOT_IMAGE := true
+PRODUCT_DEX_PREOPT_BOOT_IMAGE_PROFILE_LOCATION := frameworks/base/config/boot-image-profile.txt
+
+# Dex - Debug
+ART_BUILD_TARGET_NDEBUG := true
+ART_BUILD_TARGET_DEBUG := false
+ART_BUILD_HOST_NDEBUG := true
+ART_BUILD_HOST_DEBUG := false
+PRODUCT_MINIMIZE_JAVA_DEBUG_INFO := true
+PRODUCT_ART_TARGET_INCLUDE_DEBUG_BUILD := false
+USE_DEX2OAT_DEBUG := false
+
+# Dex - Apps
+PRODUCT_DEXPREOPT_SPEED_APPS += \
+    SystemUIGoogle \
+    SettingsIntelligence \
+    SettingsProvider \
+    SettingsGoogle \
+    NexusLauncherRelease \
+    CustomPixelLauncherOverlay \
+    Phonesky \
+    GoogleServicesFramework
 
 # Disable Configstore
 PRODUCT_PACKAGES += \
@@ -159,13 +190,14 @@ PRODUCT_PACKAGES += \
     android.hardware.memtrack@1.0-impl \
     android.hardware.memtrack@1.0-service \
     libdrm.vendor \
-    libvulkan
+    libvulkan \
+    libfmq.vendor \
+    libhwc2on1adapter \
+    libhwc2onfbadapter
 
 # DRM
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.0-impl:64 \
-    android.hardware.drm@1.0-service-lazy \
-    android.hardware.drm@1.3-service.clearkey \
     android.hardware.drm@1.0 \
     android.hardware.drm@1.0.vendor \
     android.hardware.drm@1.1 \
@@ -173,7 +205,8 @@ PRODUCT_PACKAGES += \
     android.hardware.drm@1.2 \
     android.hardware.drm@1.2.vendor \
     android.hardware.drm@1.3 \
-    android.hardware.drm@1.3.vendor
+    android.hardware.drm@1.3.vendor \
+    android.hardware.drm-service.clearkey
 
 # FM Radio
 PRODUCT_PACKAGES += \
@@ -301,11 +334,16 @@ PRODUCT_PACKAGES += \
     android.hardware.power@1.2.vendor \
     android.hardware.power@1.3 \
     android.hardware.power@1.3.vendor \
-    android.hardware.power-service-mediatek
-
+    android.hardware.power-service.mediatek-libperfmgr
+    
 PRODUCT_PACKAGES += \
-    android.hardware.power-V1-ndk_platform.vendor \
-    android.hardware.power-V2-ndk_platform.vendor
+    libmtkperf_client_vendor \
+    libmtkperf_client
+    
+PRODUCT_PACKAGES += \
+    vendor.mediatek.hardware.mtkpower@1.0.vendor \
+    vendor.mediatek.hardware.mtkpower@1.1.vendor \
+    vendor.mediatek.hardware.mtkpower@1.2-service.stub
 
 PRODUCT_COPY_FILES += \
     $(DEVICE_PATH)/configs/powerhint.json:$(TARGET_COPY_OUT_VENDOR)/etc/powerhint.json
@@ -338,10 +376,6 @@ PRODUCT_PACKAGES += \
 # Recovery
 PRODUCT_PACKAGES += \
     init.recovery.mt6768.rc
-
-# RenderScript
-PRODUCT_PACKAGES += \
-    android.hardware.renderscript@1.0-impl
 
 # RIL
 PRODUCT_PACKAGES += \
@@ -390,7 +424,8 @@ PRODUCT_PACKAGES += \
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(DEVICE_PATH) \
-    hardware/xiaomi \
+    hardware/google/interfaces \
+    hardware/google/pixel \
     hardware/mediatek
 
 # Overlays
@@ -473,6 +508,16 @@ PRODUCT_PACKAGES += \
 # Light
 PRODUCT_PACKAGES += \
     android.hardware.light-service.selene
+    
+# Keymaster
+PRODUCT_PACKAGES += \
+    android.hardware.keymaster@4.0.vendor
+
+PRODUCT_PACKAGES += \
+    libkeymaster4.vendor \
+    libkeymaster4support.vendor \
+    libpuresoftkeymasterdevice.vendor \
+    libsoft_attestation_cert.vendor
 
 # NFC stack (AOSP)
 PRODUCT_COPY_FILES += \
@@ -513,6 +558,10 @@ PRODUCT_COPY_FILES += \
     $(DEVICE_PATH)/configs/wifi/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
     $(DEVICE_PATH)/configs/wifi/wpa_supplicant.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant.conf \
     $(DEVICE_PATH)/configs/wifi/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf
+    
+PRODUCT_PACKAGES += \
+    libkeystore-wifi-hidl \
+    libkeystore-engine-wifi-hidl
 
 PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service-lazy.selene

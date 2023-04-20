@@ -4,6 +4,9 @@ persist.service.debuggable=1
 persist.sys.usb.config=mtp,adb
 ro.adb.secure=0
 
+# Apex
+ro.apex.updatable=false
+
 # Bluetooth
 bluetooth.device.class_of_device=90,2,12
 bluetooth.profile.a2dp.source.enabled=true
@@ -39,6 +42,8 @@ ro.vendor.mtk_fd_support=1
 
 # Display
 ro.opengles.version=196610
+debug.sf.disable_backpressure=1
+debug.sf.latch_unsignaled=1
 ro.vendor.display.svi=1
 ro.vendor.display.sensortype=2
 vendor.display.svi.config=1
@@ -56,10 +61,34 @@ persist.vendor.mtk.volte.enable=1
 persist.vendor.vilte_support=1
 persist.vendor.viwifi_support=1
 
-# Surfaceflinger 
+# Radio
+persist.sys.radio.force_lte_ca=true
+persist.radio.multisim.config=dsds
+persist.vendor.radio.msimmode=dsds
+persist.vendor.radio.fd.counter=150
+persist.vendor.radio.fd.off.counter=50
+persist.vendor.radio.fd.r8.counter=150
+persist.vendor.radio.fd.off.r8.counter=50
+persist.radio.multisim.config=dsds
+persist.vendor.radio.msimmode=dsds
+ro.vendor.radio.max.multisim=dsds
+persist.vendor.radio.flashless.fsm=0
+persist.vendor.radio.flashless.fsm_cst=0
+persist.vendor.radio.flashless.fsm_rw=0
+ro.vendor.radio.max.multisim=dsds
+persist.vendor.radio.mtk_dsbp_support=2
+persist.vendor.radio.mtk_ps2_rat=L/W/G
+persist.vendor.radio.mtk_ps3_rat=G
+persist.vendor.radio.smart.data.switch=1
+import /vendor/build_${ro.boot.radio.multisim.config}_vendor.prop
+ro.vendor.mtk_ril_mode=c6m_1rild
+ro.vendor.mtk_rild_read_imsi=1
+
+# SurfaceFlinger
 ro.surface_flinger.primary_display_orientation=ORIENTATION_0
 ro.surface_flinger.force_hwc_copy_for_virtual_displays=true
 ro.surface_flinger.max_frame_buffer_acquired_buffers=3
+ro.surface_flinger.running_without_sync_framework=true
 debug.sf.use_phase_offsets_as_durations=1
 debug.sf.late.sf.duration=30000000
 debug.sf.late.app.duration=24000000
@@ -70,10 +99,25 @@ debug.sf.earlyGl.app.duration=24000000
 debug.sf.hwc.min.duration=23000000
 debug.sf.disable_client_composition_cache=1
 debug.sf.enable_transaction_tracing=false
-debug.sf.enable_gl_backpressure=1
 debug.sf.predict_hwc_composition_strategy=0
-debug.sf.enable_egl_image_tracker=1
+persist.sys.sf.color_saturation=1.1
+persist.sys.sf.native_mode=0
+ro.config.avoid_gfx_accel=true
+debug.sf.hw = 1
+debug.performance.tuning=1
+video.accelerate.hw=1
+debug.egl.profiler=1
+ro.hwui.render_ahead=20
 
+# Zygote
+zygote.critical_window.minute=10
+
+# Zram
+ro.zram.mark_idle_delay_mins=60
+ro.zram.first_wb_delay_mins=1440
+ro.zram.periodic_wb_delay_hours=2
+
+# Unorganized
 persist.sys.mcd_config_file=/system/etc/mcd_default.conf
 drm.service.enabled=true
 debug.mtk_tflite.target_nnapi=29
@@ -82,17 +126,10 @@ ro.vendor.mtk_nn_quant_preferred=1
 ro.vendor.system.mtk_mapi_support=1
 init.userspace_reboot.is_supported=true
 ro.carrier=unknown
-persist.sys.radio.force_lte_ca=true
 ro.hardware.fp.sideCap=true
 ro.vendor.mtk_shutdown_support=0
 vendor.camera.mdp.cz.enable=1
 ro.hardware.egl=mali
-persist.radio.multisim.config=dsds
-persist.vendor.radio.msimmode=dsds
-persist.vendor.radio.fd.counter=150
-persist.vendor.radio.fd.off.counter=50
-persist.vendor.radio.fd.r8.counter=150
-persist.vendor.radio.fd.off.r8.counter=50
 dalvik.vm.mtk-stack-trace-file=/data/anr/mtk_traces.txt
 ro.frp.pst=/dev/block/platform/bootdevice/by-name/frp
 ro.lmk.psi_complete_stall_ms=70
@@ -137,9 +174,6 @@ persist.vendor.camera3.pipeline.bufnum.min.high_ram.fdyuv=5
 persist.vendor.camera3.pipeline.bufnum.min.low_ram.fdyuv=5
 ro.vendor.mediatek.version.branch=alps-mp-r0.mp1.tc8sp2
 ro.vendor.mediatek.version.release=alps-mp-r0.mp1.tc8sp2-V2.66.1_huaqin.r0mp1.k69v1.64.6382_P60
-persist.radio.multisim.config=dsds
-persist.vendor.radio.msimmode=dsds
-ro.vendor.radio.max.multisim=dsds
 ro.telephony.sim.count=2
 telephony.active_modems.max_count=2
 ro.vendor.mtk_besloudness_support=1
@@ -153,13 +187,8 @@ ro.vendor.mtk_gps_support=1
 ro.vendor.mtk_fm_short_antenna_support=1
 ro.vendor.mtk_widevine_drm_l1_support=1
 ro.vendor.mtk_audio_ape_support=1
-persist.vendor.radio.flashless.fsm=0
-persist.vendor.radio.flashless.fsm_cst=0
-persist.vendor.radio.flashless.fsm_rw=0
 telephony.lteOnCdmaDevice=1
-ro.vendor.mtk_ril_mode=c6m_1rild
 ro.vendor.md_prop_ver=1
-ro.vendor.radio.max.multisim=dsds
 ro.vendor.mtk_aal_support=1
 ro.vendor.mtk_pq_support=2
 ro.vendor.mtk_pq_color_mode=1
@@ -172,22 +201,12 @@ ro.mtk_key_manager_support=1
 ro.vendor.mtk_zsdhdr_support=1
 ro.vendor.mtk_slow_motion_support=1
 ro.mtk_cam_stereo_camera_support=1
-ro.vendor.mtk_rild_read_imsi=1
 ro.vendor.sim_refresh_reset_by_modem=1
 ro.vendor.mtk_external_sim_support=1
 ro.vendor.mtk_external_sim_only_slots=0
 ro.vendor.sim_me_lock_mode=0
 ro.vendor.ap_info_monitor=0
 ro.vendor.md_auto_setup_ims=1
-
-# Zygote
-zygote.critical_window.minute=10
-
-# Zram
-ro.zram.mark_idle_delay_mins=60
-ro.zram.first_wb_delay_mins=1440
-ro.zram.periodic_wb_delay_hours=2
-
 persist.vendor.ims_support=1
 persist.vendor.mtk_dynamic_ims_switch=1
 persist.vendor.mims_support=2
@@ -210,12 +229,38 @@ vendor.connsys.driver.ready=no
 persist.vendor.connsys.fm_chipid=mt6631
 persist.vendor.connsys.fm_short_antenna_support=1
 ro.vendor.wlan.gen=gen4m
-persist.vendor.radio.mtk_dsbp_support=2
 persist.vendor.mtk_ct_volte_support=3
-persist.vendor.radio.mtk_ps2_rat=L/W/G
-persist.vendor.radio.mtk_ps3_rat=G
-persist.log.tag.RILMUXD=S
 persist.vendor.log.tel_log_ctrl=1
+ro.vendor.mtk_data_config=1
+vendor.mtk.vdec.waitkeyframeforplay=9
+ro.vendor.mtk_embms_support=1
+ro.vendor.mtk_log_hide_gps=0
+ro.vendor.mtk_modem_monitor_support=1
+ro.vendor.mtk_exchange_support=1
+ro.vendor.md_log_memdump_wait=15
+ro.vendor.mtk_single_bin_modem_support=1
+ro.vendor.mtk_camera_app_version=3
+ro.telephony.iwlan_operation_mode=default
+ro.vendor.connsys.dedicated.log=1
+ro.vendor.mtk.bt_sap_enable=true
+persist.vendor.mtk_sim_switch_policy=2
+ro.vendor.mtk_dmc_support=1
+ro.vendor.mtk_mapi_support=1
+ro.vendor.pref_scale_enable_cfg=1
+persist.vendor.md_c2k_cap_dep_check=0
+ro.vendor.colorpick_adjust=true
+ro.vendor.all_modes.colorpick_adjust=true
+ro.vendor.cabc.enable=true
+ro.vendor.fps.switch.default=true
+config.svi.path=/system/etc/SVIConfig.xml
+debug.svi.logs=1
+debug.als.logs=1
+config.svi.xml=1
+config.svi.xml.print=1
+ro.vendor.mtk_uicc_clf=1
+ro.hardware.wlan.dbs=0
+
+# LogTag
 persist.log.tag.AT=S
 persist.log.tag.RILC-MTK=S
 persist.log.tag.RILC=S
@@ -452,11 +497,7 @@ persist.log.tag.PQ_DS=S
 persist.log.tag.CarrierExpressServiceImpl=S
 persist.log.tag.CarrierExpressServiceImplExt=S
 persist.log.tag.PhoneConfigurationSettings=S
-ro.vendor.mtk_data_config=1
-vendor.mtk.vdec.waitkeyframeforplay=9
-persist.sys.sf.color_saturation=1.1
-persist.sys.sf.native_mode=0
-ro.vendor.mtk_embms_support=1
+persist.log.tag.RILMUXD=S
 persist.log.tag.libPowerHal=S
 persist.log.tag.GED=S
 persist.log.tag.hwcomposer=S
@@ -469,19 +510,6 @@ persist.log.tag.PowerHalMgrImpl=S
 persist.log.tag.PowerHalMgrServiceImpl=S
 persist.log.tag.PowerHalWifiMonitor=S
 persist.log.tag.gralloc4=S
-ro.vendor.mtk_log_hide_gps=0
-ro.vendor.mtk_modem_monitor_support=1
-ro.vendor.mtk_exchange_support=1
-ro.vendor.md_log_memdump_wait=15
-ro.vendor.mtk_single_bin_modem_support=1
-ro.vendor.mtk_camera_app_version=3
-persist.vendor.radio.smart.data.switch=1
-ro.telephony.iwlan_operation_mode=default
-ro.vendor.connsys.dedicated.log=1
-ro.vendor.mtk.bt_sap_enable=true
-persist.vendor.mtk_sim_switch_policy=2
-ro.vendor.mtk_dmc_support=1
-ro.vendor.mtk_mapi_support=1
 persist.log.tag.DMC-Core=S
 persist.log.tag.DMC-TranslatorLoader=S
 persist.log.tag.DMC-TranslatorUtils=S
@@ -509,17 +537,5 @@ persist.log.tag.MAPI-NetworkSocketConnection=S
 persist.log.tag.MAPI-SocketConnection=S
 persist.log.tag.MAPI-SocketListener=S
 persist.log.tag.MAPI-CommandProcessor=S
-ro.vendor.pref_scale_enable_cfg=1
-persist.vendor.md_c2k_cap_dep_check=0
-ro.vendor.colorpick_adjust=true
-ro.vendor.all_modes.colorpick_adjust=true
-ro.vendor.cabc.enable=true
-ro.vendor.fps.switch.default=true
-config.svi.path=/system/etc/SVIConfig.xml
-debug.svi.logs=1
-debug.als.logs=1
-config.svi.xml=1
-config.svi.xml.print=1
-ro.vendor.mtk_uicc_clf=1
-ro.hardware.wlan.dbs=0
-import /vendor/build_${ro.boot.radio.multisim.config}_vendor.prop
+persist.log.tag.AppOps=S
+perstst.log.tag.AAL=S

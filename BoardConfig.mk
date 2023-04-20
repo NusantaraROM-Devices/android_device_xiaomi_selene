@@ -29,6 +29,10 @@ AB_OTA_PARTITIONS := \
     vendor \
     vbmeta \
     vbmeta_system
+    
+# APEX
+DEXPREOPT_GENERATE_APEX_IMAGE := true
+OVERRIDE_TARGET_FLATTEN_APEX := true
 
 # Architecture
 TARGET_ARCH := arm64
@@ -65,9 +69,7 @@ TARGET_SCREEN_DENSITY := 440
 
 # Platform
 TARGET_BOARD_PLATFORM := mt6768
-
-# Power
-TARGET_POWERHAL_MODE_EXT := $(DEVICE_PATH)/power/power-mode.cpp
+BOARD_HAS_MTK_HARDWARE := true
 
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true

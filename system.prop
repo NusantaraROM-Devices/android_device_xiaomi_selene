@@ -7,21 +7,21 @@ ro.camera.sound.forced=0
 # Brand
 Build.BRAND=MTK
 
-# Dalvik
+# Cached app compaction
+persist.device_config.activity_manager.use_compaction=true
+
+# Dalvik & Dex
+dalvik.vm.dexopt.secondary=true
+dalvik.vm.dex2oat-cpu-set=0,1,2,3,4,5
+dalvik.vm.dex2oat64.enabled=true
+dalvik.vm.dex2oat-threads=6
+dalvik.vm.mtk-stack-trace-file=/data/anr/mtk_traces.txt
+dalvik.vm.systemuicompilerfilter=speed
+persist.bg.dexopt.enable=true
 pm.dexopt.install=speed-profile
 pm.dexopt.bg-dexopt=speed-profile
 pm.dexopt.boot=verify
 pm.dexopt.first-boot=quicken
-pm.dexopt.ab-ota=speed-profile
-dalvik.vm.dex2oat-cpu-set=0,1,2,3,4,5
-dalvik.vm.dex2oat-threads=6
-dalvik.vm.boot-dex2oat-cpu-set=0,1,2,3,4,5
-dalvik.vm.boot-dex2oat-threads=6
-dalvik.vm.image-dex2oat-cpu-set=0,1,2,3,4,5
-dalvik.vm.image-dex2oat-threads=6
-
-# Dex2oat64
-dalvik.vm.dex2oat64.enabled=true
 
 # Display
 ro.opengles.version=196610

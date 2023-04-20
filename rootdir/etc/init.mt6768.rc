@@ -223,26 +223,6 @@ on post-fs-data
     write /sys/block/dm-4/queue/read_ahead_kb 2048
     write /sys/block/dm-5/queue/read_ahead_kb 2048
 
-# Create blkio group and apply initial settings.
-    # This feature needs kernel to support it, and the
-    # device's init.rc must actually set the correct values.
-    mkdir /dev/blkio/background
-    chown system system /dev/blkio
-    chown system system /dev/blkio/background
-    chown system system /dev/blkio/tasks
-    chown system system /dev/blkio/background/tasks
-    chown system system /dev/blkio/cgroup.procs
-    chown system system /dev/blkio/background/cgroup.procs
-    chmod 0664 /dev/blkio/tasks
-    chmod 0664 /dev/blkio/background/tasks
-    chmod 0664 /dev/blkio/cgroup.procs
-    chmod 0664 /dev/blkio/background/cgroup.procs
-    write /dev/blkio/blkio.weight 1000
-    write /dev/blkio/background/blkio.weight 200
-    write /dev/blkio/background/blkio.bfq.weight 10
-    write /dev/blkio/blkio.group_idle 0
-    write /dev/blkio/background/blkio.group_idle 0
-
     chown system system /mnt/vendor/nvcfg
     chmod 0771 /mnt/vendor/nvcfg
     restorecon_recursive /mnt/vendor/nvcfg
@@ -981,10 +961,13 @@ on boot
 
 # Stop bootprof
 on property:sys.boot_completed=1
-#Stop bootanimation
-    stop bootanim
+
 #Power Manager
     write /sys/power/pm_freeze_timeout 2000
+    
+# initialize powerHAL when boot is completed
+on property:sys.boot_completed=1
+    setprop vendor.mediatek.powerhal.init 1
 
 # end boot time fs tune
 on property:sys.boot_completed=1
@@ -1241,6 +1224,10 @@ service charger /bin/charger
 
 on property:odm.audio.typec.status=*
     setprop vendor.audio.typec.status ${odm.audio.typec.status}
+    
+# Report max frequency to unity tasks
+    write /proc/sys/kernel/sched_lib_name "UnityMain,libunity.so" 
+    write /proc/sys/kernel/sched_lib_mask_force 255
 
 service vendor.nfc_hal_service /vendor/bin/hw/android.hardware.nfc@1.2-service
     override
